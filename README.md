@@ -1,51 +1,108 @@
-<h1>Negative News and LinkedIn Profile Summarizer</h1>
-This Python script is designed to extract negative news from web search results and summarize LinkedIn profile information for a given individual. It integrates OpenAI's GPT API, Azure, Selenium, and LangChain for processing news content and LinkedIn data.
 
-Installation
-To run this script, ensure you have the following prerequisites installed:
+# Negative News & LinkedIn Profile Summarizer
 
-<code>pip install openai langchain selenium requests bs4</code>
+This Python script retrieves negative news about a person and summarizes their LinkedIn profile. It integrates web scraping, Google Search via SerpAPI, and OpenAI’s GPT-4 through Azure to provide a comprehensive overview of both LinkedIn profiles and any negative media mentions.
 
-<h2>Usage</h2>
-Here’s a quick guide on how to use the script:
+## Features
 
-<h3>1. Set Environment Variables</h3>
-You need to provide your own API keys and credentials:
-<code>
-BASE_URL = "<URL>"
-API_KEY = "<Your_OpenAI_or_Azure_Key>"
-API_VERSION = "<Your_Azure_API_Version>"
-EMBEDDING_MODEL = "text-embedding-ada-002"
-DEPLOYMENT_NAME = "<Your_Azure_Deployment_Name>"
-</code>
+- **Negative News Search**: Utilizes SerpAPI’s Google Search functionality to find any negative news related to a given individual. It focuses on terms related to fraud, crime, or other negative aspects.
+- **LinkedIn Profile Crawling**: Scrapes LinkedIn profiles using Selenium, providing a summary of the person’s role and employer.
+- **Azure OpenAI GPT-4 Integration**: Summarizes the web and LinkedIn content using GPT-4 via Azure’s OpenAI service.
+- **FAISS Vectorstore**: Processes and indexes web documents for future retrieval using FAISS and OpenAI’s embedding models.
 
-<h3>2. Execute the Script</h3>
-To extract negative news and LinkedIn summaries, run the following Python command:
+## Prerequisites
 
-<code>python negative_news_linkedin_summarizer.py</code>
-<h2>Script Workflow</h2>
-The script follows these steps:
+1. **Python 3.8+**
+2. **API Keys**
+   - Azure OpenAI API Key
+   - SerpAPI Key (for Google Search)
+3. **Browser Setup**: Selenium requires a Firefox or Chrome browser driver (in this case, it’s set up to use Firefox).
+4. **Python Packages**: Install the required Python libraries using pip. A `requirements.txt` is provided.
 
-<li>Performs Google search for negative news about a person using keywords such as "fraud," "scandal," "arrest," etc.</li>
-<li>Uses Selenium to retrieve content from the search results.</li>
-<li>Summarizes relevant negative news using OpenAI's GPT API.</li>
-<li>Performs another search for the person’s LinkedIn profile and summarizes their job designation and employer information.</li>
+   \`\`\`bash
+   pip install -r requirements.txt
+   \`\`\`
+
+## Required Packages
+
+- `langchain`
+- `serpapi`
+- `selenium`
+- `requests`
+- `bs4`
+- `openai`
+- `faiss`
+- `beautifulsoup4`
+- `logging`
+
+## Setup
+
+### 1. Set up API Keys
+
+Replace the placeholder values in the script (`<<URL>>`, `<<KEY>>`, etc.) with your actual API keys and URLs.
+
+- **Azure OpenAI API**: You need the `BASE_URL`, `API_KEY`, `API_VERSION`, and deployment name for GPT-4 and the embedding model.
+- **SerpAPI**: Provide the `SERP_KEY` for Google Search.
+
+### 2. Selenium WebDriver
+
+Ensure Selenium WebDriver is installed and accessible in your system path. Firefox is used in this script:
+
+1. Install the Firefox browser (if not installed already).
+2. Download and install the geckodriver.
+
+### 3. Running the Script
+
+Run the script as follows:
+
+\`\`\`bash
+python script.py
+\`\`\`
+
+The script will:
+
+- Fetch negative news articles (if any) related to the person’s name.
+- Retrieve and summarize their LinkedIn profile, if available.
+
+## Functions Breakdown
+
+- **`get_query_string_for_neg_news(person_name)`**  
+  Generates a Google search query for retrieving negative news about the specified person.
+
+- **`get_google_search_result(input_string)`**  
+  Fetches search results using the SerpAPI for the specified query string.
+
+- **`prepare_neg_news_summary(search_result, person_name)`**  
+  Summarizes the negative news search results by returning the top 3 article links or stating that no negative news was found.
+
+- **`linkedIn_summary(link, person_name)`**  
+  Crawls the LinkedIn page and summarizes the role/designation and employer of the specified person using GPT-4.
+
+- **`perform_external_research()`**  
+  Main function that calls both the negative news and LinkedIn profile summarization routines.
+
+## Example
+
+When you run the script with a name like “John Doe,” it will:
+
+- Search for any negative news articles related to “John Doe” using Google Search.
+- Retrieve “John Doe’s” LinkedIn profile (if available) and provide a summary of their professional background.
+
+### Example Output
+
+\`\`\`bash
+No Negative news found through web search for John Doe.
+LinkedIn Profile Summary:
+Role: Senior Software Engineer
+Employer: XYZ Corporation
+\`\`\`
+
+## Logging
+
+This script uses Python’s logging module to log errors and key actions. Logs can be reviewed for debugging or for more detailed information about the data flow.
+
+## License
+
+This project is licensed under the MIT License.
 
 
-
-<h2>Functions Overview</h2>
-<li><code>callGPT4(prompt):</code> Calls the GPT API to summarize content.</li>
-<li><code>get_google_search_result():</code>  Uses Google Search API or web scraping to retrieve search results.</li>
-<li><code>prepare_neg_news_summary():</code>  Summarizes negative news for a person based on search results.</li>
-<li><code>LinkedIn_summary():</code>  Summarizes LinkedIn profile information.</li>
-<h2>Exception Handling</h2>
-The script includes error handling for cases where no data is returned from searches or LinkedIn profile retrievals, logging relevant errors in the process.
-
-<h2>Future Improvements</h2>
-This script can be further enhanced by adding:
-<li>Different type of search types,also includes the urls where content is summarised</li>
-<li>Multi-page scraping for news articles.</li>
-<li>Additional features for processing LinkedIn data.</li>
-<li>Performance optimizations using threading or asyncio for parallel searches.</li>
-<h2>Disclaimer</h2>
-This script is designed for educational and research purposes. Ensure that you comply with legal guidelines and API rate limits when using external services like Google Search and LinkedIn.
