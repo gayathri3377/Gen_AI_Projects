@@ -1,4 +1,4 @@
-<h3>Negative News and LinkedIn Profile Summarizer</h3>
+<h1>Negative News and LinkedIn Profile Summarizer</h1>
 This Python script is designed to extract negative news from web search results and summarize LinkedIn profile information for a given individual. It integrates OpenAI's GPT API, Azure, Selenium, and LangChain for processing news content and LinkedIn data.
 
 Installation
